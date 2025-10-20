@@ -3,7 +3,7 @@ public class Coche {
     private boolean vip;
     private Estacionamiento estacionamiento;
 
-    boolean esVip() {
+    public boolean esVip() {
         return true;
     }
     void run() {
