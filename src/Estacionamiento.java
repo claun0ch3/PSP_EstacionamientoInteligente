@@ -3,36 +3,41 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 public class Estacionamiento {
-    private final int capacidadMaxima = 5;
-    private final Semaphore semaforo = new Semaphore(5);
+    private final int capacidadMax = 5;
+    private final Semaphore semaphore = new Semaphore(5);
     private final ArrayList<Coche> cochesAparcados = new ArrayList<>();
 
-    synchronized boolean entrar (Coche coche) {
-        if (cochesAparcados.size() < capacidadMaxima) {
-            cochesAparcados.add(coche);
-            return true;
-        } else {
-            try {
-                if (semaforo.tryAcquire(5, TimeUnit.SECONDS)) {
+    synchronized boolean entrar(Coche coche) {
+        try {
+            if (semaphore.tryAcquire(5, TimeUnit.SECONDS)) {
+                if (cochesAparcados.size() < capacidadMax) {
+                    cochesAparcados.add(coche);
+                    System.out.println(coche + " Ha entrado un coche");
+                    return true;
+                } else {
                     if (coche.esVip()) {
                         desalojarCocheNormal(coche);
                         cochesAparcados.add(coche);
+                        System.out.println(coche + " Ha entrado un coche vip");
                         return true;
                     }
                 }
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
             }
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
         return false;
     }
 
-    public synchronized void salir (Coche coche) {
+    synchronized void salir(Coche coche) {
         cochesAparcados.remove(coche);
-        semaforo.release();
+        semaphore.release();
+
     }
-    void desalojarCocheNormal (Coche cocheVip) {
-        if (cochesAparcados.size() < capacidadMaxima) {
+
+    void desalojarCocheNormal(Coche cocheVip) {
+        if (cochesAparcados.size() < capacidadMax) {
             for (int i = 0; i < cochesAparcados.size(); i++) {
                 if (!cochesAparcados.get(i).esVip()) {
                     salir(cochesAparcados.get(i));

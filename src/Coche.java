@@ -3,6 +3,12 @@ public class Coche extends Thread {
     private boolean vip;
     private Estacionamiento estacionamiento;
 
+    public Coche(String nombre, boolean vip, Estacionamiento estacionamiento) {
+        this.nombre = nombre;
+        this.vip = vip;
+        this.estacionamiento = estacionamiento;
+    }
+
     public boolean esVip() {
         return vip;
     }
@@ -10,14 +16,18 @@ public class Coche extends Thread {
     @Override
     public void run() {
         boolean aparcado = estacionamiento.entrar(this);
-        if (aparcado) {
-            try {
+        try {
+            if (aparcado) {
                 double numero = (Math.random()* 4 + 2);
                 Thread.sleep((long) (numero * 1000));
-                estacionamiento.salir(this);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                System.out.println(this + " ha salido");
+            } else {
+                System.out.println(this + " no ha logrado entrar");
             }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            estacionamiento.salir(this);
         }
     }
 
