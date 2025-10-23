@@ -27,7 +27,6 @@ public class Estacionamiento {
         return false;
     }
 
-    
     public synchronized void salir (Coche coche) {
         cochesAparcados.remove(coche);
         semaforo.release();
