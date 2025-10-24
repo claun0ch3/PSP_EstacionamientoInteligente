@@ -22,7 +22,7 @@ public class Main {
                 coche.join();
             }
             estacionamiento.contadores();
-
+ 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
