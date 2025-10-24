@@ -21,6 +21,7 @@ public class Main {
             for (Coche coche : coches) {
                 coche.join();
             }
+            estacionamiento.contadores();
 
         } catch (Exception e) {
             throw new RuntimeException(e);
